@@ -1,21 +1,39 @@
-"""имплементация наивного байесовского классификатора"""
+from collections import defaultdict
+from math import log
+
+
 class NaiveBayes:
     def __init__(self):
         pass
 
-    def fit(self, data: list, target: list):
-        """
+    @staticmethod
+    def fit(data: list, target: list):
+        classes, freq = defaultdict(lambda: 0), defaultdict(lambda: 0)
+        for feats, label in zip(data, target):
+            classes[label] += 1  # count classes frequencies
+            for feat in feats.split():
+                freq[label, feat] += 1  # count features frequencies
+                # if feat == 'FA':
+                #     print(label, )
 
-        :param data: массив документов, каждый документ - объект типа str
-        :param target: массив меток объектов
-        :return:
-        """
-        pass
+        for label, feat in freq:  # normalize features frequencies
+            freq[label, feat] /= classes[label]
 
-    def predict(self, data: list):
-        """
+        for c in classes:  # normalize classes frequencies
+            classes[c] /= len(target)
 
-        :param data: массив документов, для каждого из которых нужно предсказать метку
-        :return:
-        """
-        pass
+        return classes, freq  # return P(C) and P(O|C)
+
+    @staticmethod
+    def predict(classifier, feats):
+        classes, prob = classifier
+        # calculate argmin(-log(C|O))
+        return (
+            min(
+                classes.keys(),
+                key=lambda cl: -log(classes[cl]) + sum(
+                    -log(prob.get((cl, feat), 10 ** (-7)))
+                    for feat in feats.split()
+                )
+            )
+        )
