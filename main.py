@@ -5,18 +5,17 @@ def main():
     data, target = DataSetFileReader.read_dataset_file(
         'data/SMSSpamCollection'
     )
-    classifier = NaiveBayes.fit(data, target)
 
-    result = NaiveBayes.predict(
-        classifier,
-        'SMS. ac Sptv: The New Jersey Devils and the Detroit Red Wings play '
-        'Ice Hockey. Correct or Incorrect? End? Reply END SPTV'
-    )
-    print(result)
+    classifier = NaiveBayes()
+    classifier.fit(data, target)
 
-    result = NaiveBayes.predict(classifier, 'Fair enough, anything going on?')
-    print(result)
+    input_data = DataSetFileReader.read_input_data_file('data/inputdata')
 
 
+    result = NaiveBayes.predict(classifier, input_data)
+
+    for pred, msg in zip(result, input_data):
+        print('{0} -> {1}'.format(pred.upper(), msg))
+    
 if __name__ == '__main__':
     main()

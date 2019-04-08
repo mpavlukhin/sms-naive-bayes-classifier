@@ -1,4 +1,4 @@
-class DataSetFileReader():
+class DataSetFileReader:
     @staticmethod
     def read_dataset_file(filepath):
         with open(filepath, 'r', encoding='utf8') as dataset:
@@ -12,3 +12,12 @@ class DataSetFileReader():
                 data.append(msg)
 
             return data, target
+
+    @staticmethod
+    def read_input_data_file(filepath):
+        with open(filepath, 'r', encoding='utf8') as dataset:
+            data = []
+            for line in dataset:
+                data.append(line)
+
+            return data
